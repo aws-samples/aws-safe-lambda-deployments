@@ -4,7 +4,9 @@ AWS Lambda and AWS CodeDeploy recently made it possible to automatically shift i
 
 The sample code here supports the [Safe Deployments with AWS Lambda](https://aws.amazon.com/blogs/compute/implementing-safe-aws-lambda-deployments-with-aws-codedeploy/) Blog post. See the post for instructions and a detailed walkthrough.
 
-template.yaml is a [Serverless Application Model/SAM](https://github.com/awslabs/serverless-application-model) template that can be used to deploy this sample.
+template.yaml -- [Serverless Application Model/SAM](https://github.com/awslabs/serverless-application-model) template that can be used to deploy this sample.
+
+s3.json -- sample event that can be used to test the function when running it with SAM Local.
 
 ## License Summary
 
