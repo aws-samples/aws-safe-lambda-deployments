@@ -1,4 +1,4 @@
-/*
+1/*
  * Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this
@@ -22,26 +22,16 @@ const s3 = new AWS.S3();
 
 exports.handler = async (event, context) => {
 	console.log(`I am here! " ${context.functionName}  +  ":"  +  ${context.functionVersion}`);
-
 	let response
 	try {
-
 		const data = await s3.listBuckets().promise();
 		const allBuckets = data.Buckets;
 
 		console.log(`Total buckets: ${allBuckets.length}`)
 
-		//  New Code begins here
-		let counter = 0;
-		for (var i in allBuckets) {
-			if (allBuckets[i].Name[0] === "a")
-				counter++;
-		}
-		console.log(`Total buckets starting with a: ${counter}`);
-
 		response = {
 			statusCode: 200,
-			body: counter
+			body: allBuckets.length
 		};
 
 	} catch (error) {
@@ -54,3 +44,4 @@ exports.handler = async (event, context) => {
 
 	return response
 }
+
