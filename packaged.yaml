@@ -1,0 +1,58 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: An example SAM template for Lambda Safe Deployments.
+Resources:
+  preTrafficHook:
+    Properties:
+      CodeUri: s3://aws-samples-pputhran-frankfurt/fd41e1dc2b50364fc5e54e2eca42093b
+      DeploymentPreference:
+        Enabled: false
+      Environment:
+        Variables:
+          NewVersion:
+            Ref: returnS3Buckets.Version
+      FunctionName: CodeDeployHook_preTrafficHook
+      Handler: preTrafficHook.handler
+      Policies:
+      - Statement:
+        - Action:
+          - codedeploy:PutLifecycleEventHookExecutionStatus
+          Effect: Allow
+          Resource:
+            Fn::Sub: arn:aws:codedeploy:${AWS::Region}:${AWS::AccountId}:deploymentgroup:${ServerlessDeploymentApplication}/*
+        Version: '2012-10-17'
+      - Statement:
+        - Action:
+          - lambda:InvokeFunction
+          Effect: Allow
+          Resource:
+            Ref: returnS3Buckets.Version
+        Version: '2012-10-17'
+      Runtime: nodejs10.x
+      Timeout: 5
+    Type: AWS::Serverless::Function
+  returnS3Buckets:
+    Properties:
+      AutoPublishAlias: live
+      CodeUri: s3://aws-samples-pputhran-frankfurt/fd41e1dc2b50364fc5e54e2eca42093b
+      DeploymentPreference:
+        Hooks:
+          PreTraffic:
+            Ref: preTrafficHook
+        Type: Linear10PercentEvery1Minute
+      Events:
+        Api:
+          Properties:
+            Method: get
+            Path: /test
+          Type: Api
+      Handler: returnS3Buckets.handler
+      Policies:
+      - Statement:
+        - Action:
+          - s3:ListAllMyBuckets
+          Effect: Allow
+          Resource: '*'
+        Version: '2012-10-17'
+      Runtime: nodejs10.x
+    Type: AWS::Serverless::Function
+Transform: AWS::Serverless-2016-10-31
