@@ -1,4 +1,4 @@
-/*
+1/*
  * Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this
@@ -15,30 +15,33 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
- 'use strict';
+'use strict';
 
-var AWS = require('aws-sdk');
-var s3 = new AWS.S3();
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3();
 
-exports.handler = (event, context, callback) => {
-	console.log("I am here! " + context.functionName  +  ":"  +  context.functionVersion);
+exports.handler = async (event, context) => {
+	console.log(`I am here! " ${context.functionName}  +  ":"  +  ${context.functionVersion}`);
+	let response
+	try {
+		const data = await s3.listBuckets().promise();
+		const allBuckets = data.Buckets;
 
-	s3.listBuckets(function (err, data){
-		if(err){
-			console.log(err, err.stack);
-			callback(null, {
-				statusCode: 500,
-				body: "Failed!"
-			});
-		}
-		else{
-			var allBuckets = data.Buckets;
+		console.log(`Total buckets: ${allBuckets.length}`)
 
-			console.log("Total buckets: " + allBuckets.length);
-			callback(null, {
-				statusCode: 200,
-				body: allBuckets.length
-			});
-		}
-	});	
+		response = {
+			statusCode: 200,
+			body: allBuckets.length
+		};
+
+	} catch (error) {
+		console.log(`Error - `, error, error.stack);
+		return {
+			statusCode: 500,
+			body: JSON.stringify(error)
+		};
+	}
+
+	return response
 }
+

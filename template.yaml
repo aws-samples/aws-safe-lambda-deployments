@@ -8,7 +8,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: returnS3Buckets.handler
-      Runtime: nodejs6.10
+      Runtime: nodejs10.x
       AutoPublishAlias: live
       Policies:
         - Version: "2012-10-17"
@@ -46,7 +46,7 @@ Resources:
             Action: 
               - "lambda:InvokeFunction"
             Resource: !Ref returnS3Buckets.Version
-      Runtime: nodejs6.10
+      Runtime: nodejs10.x
       FunctionName: 'CodeDeployHook_preTrafficHook'
       DeploymentPreference:
         Enabled: false
