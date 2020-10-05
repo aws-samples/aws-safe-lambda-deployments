@@ -46,7 +46,7 @@ Resources:
             Action: 
               - "lambda:InvokeFunction"
             Resource: !Ref returnS3Buckets.Version
-      Runtime: nodejs6.10
+      Runtime: nodejs12.x
       FunctionName: 'CodeDeployHook_preTrafficHook'
       DeploymentPreference:
         Enabled: false
